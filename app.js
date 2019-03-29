@@ -49,7 +49,7 @@ client.on("message", async message => {
               else if(botPos < target.highestRole.calculatedPosition) message.reply("Thanos cannot kick " + target + ", he doesn't have enough power. Make sure he overpowers " + target + " by ensuring his highest role is higher than " + target + "'s highest role, which is " + target.highestRole);
               else{
                 target.send("Message from " + message.guild.name + ": \n\n" + config.messages.kickPM);
-                target.kick();
+                await target.kick();
                 message.reply("" + target + config.messages.kick);
               }
             }
@@ -93,7 +93,7 @@ client.on("message", async message => {
               else if(botPos < target.highestRole.calculatedPosition) message.reply("Thanos cannot ban " + target + ", he doesn't have enough power. Make sure he overpowers " + target + " by ensuring his highest role is higher than " + target + "'s highest role, which is " + target.highestRole);
               else{
                 target.send("Message from " + message.guild.name + ": \n\n" + config.messages.kickPM);
-                target.kick();
+                await target.kick();
                 message.reply("" + target + config.messages.kick);
               }
           }
