@@ -6,6 +6,9 @@ const Discord = require("discord.js");
 // this is what we're refering to. Your client.
 const client = new Discord.Client();
 
+// Create a delay
+const delay = (msec) => new Promise((resolve) => setTimeout(resolve, msec));
+
 // Here we load the config.json file that contains our token and our prefix values. 
 const config = require("./config.json");
 // config.token contains the bot's token
@@ -49,12 +52,37 @@ client.on("message", async message => {
               else if(botPos < target.highestRole.calculatedPosition) message.reply("Thanos cannot kick " + target + ", he doesn't have enough power. Make sure he overpowers " + target + " by ensuring his highest role is higher than " + target + "'s highest role, which is " + target.highestRole);
               else{
                 target.send("Message from " + message.guild.name + ": \n\n" + config.messages.kickPM);
-                await target.kick();
+                await delay(1000);
+                target.kick();
                 message.reply("" + target + config.messages.kick);
               }
             }
             catch(e){
               message.reply("Thanos does not know how to kick \"" + txt[i] + "\", he can only kick individual users or attempt to kick half of everyone on the server with `"+ config.commands.superBan + "`.");
+              console.log(e);
+            }
+          }
+        } else message.reply(config.messages.banNoName);
+      }
+
+      if(txt[1] == config.commands.ban){
+        if(txt.length > 2){
+          for(i = 2; i < txt.length; i++){
+            try{
+              var target = txt[i];
+              target = message.guild.members.get(target.replace(/\D/g,''));
+              if(target == message.member || txt[i].toLowerCase() == "me") message.reply(config.messages.selfBan);
+              else if(target == botMem || txt[i].toLowerCase() == "thanos") message.reply(config.messages.thanosBan);
+              else if(botPos < target.highestRole.calculatedPosition) message.reply("Thanos cannot ban " + target + ", he doesn't have enough power. Make sure he overpowers " + target + " by ensuring his highest role is higher than " + target + "'s highest role, which is " + target.highestRole);
+              else{
+                target.send("Message from " + message.guild.name + ": \n\n" + config.messages.banPM);
+                await delay(1000);
+                message.guild.ban(target);
+                message.reply("" + target + config.messages.ban);
+              }
+            }
+            catch(e){
+              message.reply("Thanos does not know how to ban \"" + txt[i] + "\", he can only ban individual users or attempt to ban half of everyone on the server with `"+ config.commands.superBan + "`.");
               console.log(e);
             }
           }
@@ -93,7 +121,8 @@ client.on("message", async message => {
               else if(botPos < target.highestRole.calculatedPosition) message.reply("Thanos cannot ban " + target + ", he doesn't have enough power. Make sure he overpowers " + target + " by ensuring his highest role is higher than " + target + "'s highest role, which is " + target.highestRole);
               else{
                 target.send("Message from " + message.guild.name + ": \n\n" + config.messages.kickPM);
-                await target.kick();
+                await delay(1000);
+                target.kick();
                 message.reply("" + target + config.messages.kick);
               }
           }
